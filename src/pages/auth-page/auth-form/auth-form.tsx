@@ -2,6 +2,7 @@ import React from 'react';
 import {Button, Checkbox, FormControlLabel, Link, TextField, Typography} from '@mui/material';
 import style from './auth-form.module.css';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
+import {loginValidation, passwordValidation} from './validation';
 
 type FormDataType = {
     email: string
@@ -11,13 +12,11 @@ type FormDataType = {
 
 export const AuthForm = () => {
 
-    const {register, handleSubmit, control, formState: {errors}} = useForm<FormDataType>();
+    const {handleSubmit, control, formState: {errors}} = useForm<FormDataType>();
 
     const onSubmit: SubmitHandler<FormDataType> = (data) => {
-        console.log(data);
     };
 
-    console.log(!!errors);
 
 
     return (
@@ -31,12 +30,12 @@ export const AuthForm = () => {
                 <Controller
                     control={control}
                     name="email"
+                    rules={loginValidation}
                     render={({field}) => <TextField
                         label={'Email'}
                         variant="outlined"
                         margin={'normal'}
                         fullWidth
-                        {...register('email', {required: 'This field is required'})}
                         value={field.value || ''}
                         onChange={(e) => field.onChange(e)}
                         helperText={errors.email?.message}
@@ -48,13 +47,13 @@ export const AuthForm = () => {
                 <Controller
                     control={control}
                     name="password"
+                    rules={passwordValidation}
                     render={({field}) => <TextField
                         label="Password"
                         type="password"
                         variant="outlined"
                         margin={'normal'}
                         fullWidth
-                        {...register('password', {required: 'This field is required',  minLength: {value: 4, message: 'Min length is 4'}})}
                         value={field.value || ''}
                         onChange={(e) => field.onChange(e)}
                         helperText={errors.password?.message}
@@ -63,7 +62,7 @@ export const AuthForm = () => {
                     }
                 />
 
-                <Controller
+                <div style={{display: 'flex'}}><Controller
                     control={control}
                     name="rememberMe"
                     render={({field}) => (
@@ -74,14 +73,20 @@ export const AuthForm = () => {
                             onChange={(e) => field.onChange(e)}
                         />
                     )}
-                />
+                /></div>
 
-                <Button variant="contained" type={'submit'} sx={{marginBottom: '10px'}} fullWidth disabled={!!errors.email && !!errors.password}>Login</Button>
+                <Button
+                    variant="contained"
+                    type={'submit'}
+                    sx={{marginBottom: '10px'}}
+                    fullWidth
+                    disabled={!!errors.email && !!errors.password}
+                >Login</Button>
+
+                <Typography variant="subtitle1" sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                    New User? <Link href="#">Register</Link>
+                </Typography>
             </form>
-
-            <Typography variant="subtitle1">
-                New User? <Link href="#">Register</Link>
-            </Typography>
         </div>
     );
 };
