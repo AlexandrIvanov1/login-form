@@ -3,8 +3,9 @@ import {Button, Checkbox, FormControlLabel, Link, TextField, Typography} from '@
 import style from './auth-form.module.css';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {loginValidation, passwordValidation} from './validation';
+import {authAPI} from '../../../api/api';
 
-type FormDataType = {
+export type FormDataType = {
     email: string
     password: string
     rememberMe: boolean
@@ -15,6 +16,7 @@ export const AuthForm = () => {
     const {handleSubmit, control, formState: {errors}} = useForm<FormDataType>();
 
     const onSubmit: SubmitHandler<FormDataType> = (data) => {
+        authAPI.login(data)
     };
 
 
